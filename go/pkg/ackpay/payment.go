@@ -7,18 +7,18 @@ import (
 	"strings"
 	"time"
 
-	"github.com/agentcommercekit/ack/go/pkg/did"
-	"github.com/agentcommercekit/ack/go/pkg/jwt"
-	"github.com/agentcommercekit/ack/go/pkg/keys"
-	"github.com/agentcommercekit/ack/go/pkg/vc"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/did"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/jwt"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/vc"
 )
 
 // PaymentRequest represents a request for payment (HTTP 402 Payment Required)
 type PaymentRequest struct {
 	ID              string                 `json:"id"`
-	Payee           string                 `json:"payee"`           // DID of payee
-	Amount          *big.Int               `json:"amount"`          // Amount in smallest unit
-	Currency        string                 `json:"currency"`        // Currency code (USD, ETH, USDC, etc.)
+	Payee           string                 `json:"payee"`    // DID of payee
+	Amount          *big.Int               `json:"amount"`   // Amount in smallest unit
+	Currency        string                 `json:"currency"` // Currency code (USD, ETH, USDC, etc.)
 	Description     string                 `json:"description"`
 	PaymentMethods  []PaymentMethod        `json:"payment_methods"`
 	ExpiresAt       *time.Time             `json:"expires_at,omitempty"`
@@ -30,28 +30,28 @@ type PaymentRequest struct {
 
 // PaymentMethod represents a supported payment method
 type PaymentMethod struct {
-	Type            PaymentMethodType      `json:"type"`
-	Currency        string                 `json:"currency"`
-	Network         string                 `json:"network,omitempty"`         // For crypto payments
-	Address         string                 `json:"address,omitempty"`         // For crypto payments
-	PaymentURL      string                 `json:"payment_url,omitempty"`     // For traditional payments
-	ProcessorInfo   map[string]interface{} `json:"processor_info,omitempty"`  // Payment processor specific data
-	MinAmount       *big.Int               `json:"min_amount,omitempty"`
-	MaxAmount       *big.Int               `json:"max_amount,omitempty"`
-	Fee             *big.Int               `json:"fee,omitempty"`
-	EstimatedTime   time.Duration          `json:"estimated_time,omitempty"`
+	Type          PaymentMethodType      `json:"type"`
+	Currency      string                 `json:"currency"`
+	Network       string                 `json:"network,omitempty"`        // For crypto payments
+	Address       string                 `json:"address,omitempty"`        // For crypto payments
+	PaymentURL    string                 `json:"payment_url,omitempty"`    // For traditional payments
+	ProcessorInfo map[string]interface{} `json:"processor_info,omitempty"` // Payment processor specific data
+	MinAmount     *big.Int               `json:"min_amount,omitempty"`
+	MaxAmount     *big.Int               `json:"max_amount,omitempty"`
+	Fee           *big.Int               `json:"fee,omitempty"`
+	EstimatedTime time.Duration          `json:"estimated_time,omitempty"`
 }
 
 // PaymentMethodType represents different types of payment methods
 type PaymentMethodType string
 
 const (
-	PaymentMethodCrypto      PaymentMethodType = "crypto"
-	PaymentMethodCreditCard  PaymentMethodType = "credit_card"
+	PaymentMethodCrypto       PaymentMethodType = "crypto"
+	PaymentMethodCreditCard   PaymentMethodType = "credit_card"
 	PaymentMethodBankTransfer PaymentMethodType = "bank_transfer"
-	PaymentMethodPayPal      PaymentMethodType = "paypal"
-	PaymentMethodStripe      PaymentMethodType = "stripe"
-	PaymentMethodWire        PaymentMethodType = "wire"
+	PaymentMethodPayPal       PaymentMethodType = "paypal"
+	PaymentMethodStripe       PaymentMethodType = "stripe"
+	PaymentMethodWire         PaymentMethodType = "wire"
 )
 
 // PaymentResponse represents a payment response
@@ -62,8 +62,8 @@ type PaymentResponse struct {
 	Amount           *big.Int               `json:"amount"`
 	Currency         string                 `json:"currency"`
 	Status           PaymentStatus          `json:"status"`
-	Payer            string                 `json:"payer"`            // DID of payer
-	Payee            string                 `json:"payee"`            // DID of payee
+	Payer            string                 `json:"payer"` // DID of payer
+	Payee            string                 `json:"payee"` // DID of payee
 	Timestamp        time.Time              `json:"timestamp"`
 	BlockchainTxHash string                 `json:"blockchain_tx_hash,omitempty"`
 	ConfirmationURL  string                 `json:"confirmation_url,omitempty"`
@@ -75,38 +75,38 @@ type PaymentResponse struct {
 type PaymentStatus string
 
 const (
-	PaymentStatusPending    PaymentStatus = "pending"
-	PaymentStatusCompleted  PaymentStatus = "completed"
-	PaymentStatusFailed     PaymentStatus = "failed"
-	PaymentStatusCancelled  PaymentStatus = "cancelled"
-	PaymentStatusRefunded   PaymentStatus = "refunded"
+	PaymentStatusPending   PaymentStatus = "pending"
+	PaymentStatusCompleted PaymentStatus = "completed"
+	PaymentStatusFailed    PaymentStatus = "failed"
+	PaymentStatusCancelled PaymentStatus = "cancelled"
+	PaymentStatusRefunded  PaymentStatus = "refunded"
 )
 
 // PaymentReceipt represents a verifiable payment receipt
 type PaymentReceipt struct {
-	ID               string                 `json:"id"`
-	PaymentRequestID string                 `json:"payment_request_id"`
-	TransactionID    string                 `json:"transaction_id"`
-	Amount           *big.Int               `json:"amount"`
-	Currency         string                 `json:"currency"`
-	Payer            string                 `json:"payer"`            // DID of payer
-	Payee            string                 `json:"payee"`            // DID of payee
-	Timestamp        time.Time              `json:"timestamp"`
-	PaymentMethod    PaymentMethod          `json:"payment_method"`
-	BlockchainTxHash string                 `json:"blockchain_tx_hash,omitempty"`
-	VerifiableReceipt *vc.Credential        `json:"verifiable_receipt,omitempty"`
-	Metadata         map[string]interface{} `json:"metadata,omitempty"`
+	ID                string                 `json:"id"`
+	PaymentRequestID  string                 `json:"payment_request_id"`
+	TransactionID     string                 `json:"transaction_id"`
+	Amount            *big.Int               `json:"amount"`
+	Currency          string                 `json:"currency"`
+	Payer             string                 `json:"payer"` // DID of payer
+	Payee             string                 `json:"payee"` // DID of payee
+	Timestamp         time.Time              `json:"timestamp"`
+	PaymentMethod     PaymentMethod          `json:"payment_method"`
+	BlockchainTxHash  string                 `json:"blockchain_tx_hash,omitempty"`
+	VerifiableReceipt *vc.Credential         `json:"verifiable_receipt,omitempty"`
+	Metadata          map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // PaymentService represents a payment processing service
 type PaymentService struct {
-	DID             *did.DID
-	KeyPair         *keys.KeyPair
-	Name            string
+	DID              *did.DID
+	KeyPair          *keys.KeyPair
+	Name             string
 	SupportedMethods []PaymentMethodType
-	ReceiptIssuer   string // URL of receipt issuer service
+	ReceiptIssuer    string            // URL of receipt issuer service
 	BlockchainClient *BlockchainClient // For crypto payment verification
-	StripeKey       string            // Stripe API key
+	StripeKey        string            // Stripe API key
 }
 
 // NewPaymentService creates a new payment service
@@ -143,17 +143,17 @@ func (ps *PaymentService) CreatePaymentRequest(
 	methods []PaymentMethod,
 	expiresAt *time.Time,
 ) (*PaymentRequest, error) {
-	
+
 	request := &PaymentRequest{
-		ID:             generatePaymentRequestID(),
-		Payee:          payeeDID,
-		Amount:         amount,
-		Currency:       currency,
-		Description:    description,
-		PaymentMethods: methods,
-		ExpiresAt:      expiresAt,
+		ID:              generatePaymentRequestID(),
+		Payee:           payeeDID,
+		Amount:          amount,
+		Currency:        currency,
+		Description:     description,
+		PaymentMethods:  methods,
+		ExpiresAt:       expiresAt,
 		ReceiptRequired: true,
-		ReceiptService: ps.ReceiptIssuer,
+		ReceiptService:  ps.ReceiptIssuer,
 		Metadata: map[string]interface{}{
 			"service": ps.Name,
 			"created": time.Now(),
@@ -165,7 +165,7 @@ func (ps *PaymentService) CreatePaymentRequest(
 	if err != nil {
 		return nil, fmt.Errorf("failed to sign payment request: %w", err)
 	}
-	
+
 	request.Signature = signature
 	return request, nil
 }
@@ -188,7 +188,7 @@ func (ps *PaymentService) ProcessPayment(ctx context.Context, request *PaymentRe
 	// Process payment based on method type
 	var txHash string
 	var err error
-	
+
 	switch selectedMethod.Type {
 	case PaymentMethodCrypto:
 		txHash, err = ps.processCryptoPayment(ctx, request, selectedMethod)
@@ -262,7 +262,7 @@ func (ps *PaymentService) VerifyPaymentReceipt(ctx context.Context, receiptJWT s
 	// Resolve issuer's verification key
 	resolver := did.NewResolver()
 	var issuerKeyPair *keys.KeyPair
-	
+
 	if token.Header.KeyID != "" {
 		var err error
 		issuerKeyPair, err = resolver.GetPublicKey(ctx, token.Header.KeyID)
@@ -353,9 +353,9 @@ func (ps *PaymentService) signPaymentRequest(request *PaymentRequest) (string, e
 	}
 
 	claims := jwt.Claims{
-		Issuer:    ps.DID.String(),
-		Subject:   request.Payee,
-		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		Issuer:   ps.DID.String(),
+		Subject:  request.Payee,
+		IssuedAt: jwt.NewNumericDate(time.Now()),
 		Extra: map[string]interface{}{
 			"payment_request": request,
 		},
@@ -392,7 +392,7 @@ func (ps *PaymentService) verifyPaymentRequest(request *PaymentRequest) error {
 
 	// Create resolver if not exists
 	resolver := did.NewResolver()
-	
+
 	// Resolve issuer key
 	var issuerKeyPair *keys.KeyPair
 	if token.Header.KeyID != "" {
@@ -466,7 +466,7 @@ func (ps *PaymentService) processCryptoPayment(ctx context.Context, request *Pay
 	// Set up blockchain client for the specific network
 	if method.Network != "" {
 		ps.BlockchainClient.Network = method.Network
-		
+
 		// Configure RPC endpoint based on network
 		switch method.Network {
 		case "ethereum", "mainnet":
@@ -507,7 +507,7 @@ func (ps *PaymentService) processStripePayment(ctx context.Context, request *Pay
 	// 2. Process the payment with provided payment method
 	// 3. Handle webhooks for payment confirmation
 	// 4. Return the actual charge/payment intent ID
-	
+
 	return ps.createStripePaymentIntent(ctx, request, method)
 }
 
@@ -516,23 +516,23 @@ func (ps *PaymentService) createStripePaymentIntent(ctx context.Context, request
 	// This is a simplified mock implementation
 	// In production, you would use the Stripe Go SDK:
 	// https://github.com/stripe/stripe-go
-	
+
 	// Example payload for Stripe API:
 	paymentData := map[string]interface{}{
 		"amount":   request.Amount.Int64(), // Amount in cents
 		"currency": strings.ToLower(request.Currency),
 		"metadata": map[string]string{
 			"payment_request_id": request.ID,
-			"description":       request.Description,
+			"description":        request.Description,
 		},
 		"automatic_payment_methods": map[string]bool{
 			"enabled": true,
 		},
 	}
-	
+
 	// Mock successful payment intent creation
 	_ = paymentData // Use the data in real implementation
-	
+
 	// Return a mock payment intent ID
 	return "pi_demo_" + generateTransactionID(), nil
 }
@@ -543,21 +543,21 @@ func (ps *PaymentService) generateReceipt(ctx context.Context, request *PaymentR
 	credential := vc.NewCredential()
 	credential.AddType("PaymentReceiptCredential")
 	credential.SetIssuer(ps.DID.String())
-	
+
 	// Set credential subject
 	receiptData := map[string]interface{}{
-		"receipt_id":           generateReceiptID(),
-		"payment_request_id":   request.ID,
-		"transaction_id":       response.TransactionID,
-		"amount":              response.Amount.String(),
-		"currency":            response.Currency,
-		"payer":               response.Payer,
-		"payee":               response.Payee,
-		"payment_method":      response.PaymentMethod,
-		"blockchain_tx_hash":  response.BlockchainTxHash,
-		"timestamp":           response.Timestamp,
+		"receipt_id":         generateReceiptID(),
+		"payment_request_id": request.ID,
+		"transaction_id":     response.TransactionID,
+		"amount":             response.Amount.String(),
+		"currency":           response.Currency,
+		"payer":              response.Payer,
+		"payee":              response.Payee,
+		"payment_method":     response.PaymentMethod,
+		"blockchain_tx_hash": response.BlockchainTxHash,
+		"timestamp":          response.Timestamp,
 	}
-	
+
 	credential.CredentialSubject = receiptData
 
 	// Create receipt
@@ -565,13 +565,13 @@ func (ps *PaymentService) generateReceipt(ctx context.Context, request *PaymentR
 		ID:                generateReceiptID(),
 		PaymentRequestID:  request.ID,
 		TransactionID:     response.TransactionID,
-		Amount:           response.Amount,
-		Currency:         response.Currency,
-		Payer:            response.Payer,
-		Payee:            response.Payee,
-		Timestamp:        response.Timestamp,
-		PaymentMethod:    response.PaymentMethod,
-		BlockchainTxHash: response.BlockchainTxHash,
+		Amount:            response.Amount,
+		Currency:          response.Currency,
+		Payer:             response.Payer,
+		Payee:             response.Payee,
+		Timestamp:         response.Timestamp,
+		PaymentMethod:     response.PaymentMethod,
+		BlockchainTxHash:  response.BlockchainTxHash,
 		VerifiableReceipt: credential,
 	}
 

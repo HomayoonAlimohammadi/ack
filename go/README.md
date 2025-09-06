@@ -14,7 +14,7 @@ This Go implementation provides a unified, complete system that addresses the sc
 ## 📋 Table of Contents
 
 - [Quick Start](#-quick-start)
-- [Features](#-features) 
+- [Features](#-features)
 - [Architecture](#-architecture)
 - [Installation](#-installation)
 - [Usage](#-usage)
@@ -36,7 +36,7 @@ go build -o bin/ack-demo cmd/ack-demo/main.go
 # Run identity verification demo
 ./bin/ack-demo identity
 
-# Run payment processing demo  
+# Run payment processing demo
 ./bin/ack-demo payments
 
 # Run end-to-end demo
@@ -49,6 +49,7 @@ go build -o bin/ack-demo cmd/ack-demo/main.go
 ## ✨ Features
 
 ### 🔐 ACK-ID (Identity Protocol)
+
 - **Multi-curve Cryptography**: Ed25519, secp256k1, secp256r1 support
 - **W3C Standards**: Full DID and Verifiable Credentials compliance
 - **DID Methods**: `did:key` and `did:web` resolution with HTTP caching
@@ -57,6 +58,7 @@ go build -o bin/ack-demo cmd/ack-demo/main.go
 - **Google A2A**: Compatible with Google Agent-to-Agent protocol
 
 ### 💳 ACK-Pay (Payment Protocol)
+
 - **Multiple Methods**: Credit cards (Stripe), cryptocurrency, bank transfers
 - **Blockchain Integration**: Real Ethereum and ERC-20 token verification
 - **Payment Receipts**: Cryptographically verifiable receipts with DID signatures
@@ -64,6 +66,7 @@ go build -o bin/ack-demo cmd/ack-demo/main.go
 - **HTTP 402**: Standard "Payment Required" response handling
 
 ### 🔧 Core Infrastructure
+
 - **Cryptographic Keys**: Complete key generation, signing, and verification
 - **DID Resolution**: HTTP-based resolution with caching for `did:web`
 - **JWT Operations**: Full JWT creation and verification with proper algorithm mapping
@@ -74,9 +77,9 @@ go build -o bin/ack-demo cmd/ack-demo/main.go
 
 ```
 pkg/
-├── ack/           # Main SDK package (exports everything)  
+├── ack/           # Main SDK package (exports everything)
 ├── ackid/         # Identity protocol implementation
-├── ackpay/        # Payment protocol implementation  
+├── ackpay/        # Payment protocol implementation
 ├── did/           # Decentralized Identifier utilities
 ├── jwt/           # JWT creation/verification utilities
 ├── keys/          # Cryptographic key management
@@ -99,15 +102,18 @@ cmd/
 ## 📦 Installation
 
 ### Prerequisites
+
 - **Go 1.21+** (uses modern Go features)
 - **Git** for cloning the repository
 
 ### Dependencies
+
 - `github.com/btcsuite/btcd/btcec/v2` - Bitcoin secp256k1 curves
 - `github.com/golang-jwt/jwt/v5` - JWT operations
 - Standard library only for core functionality
 
 ### Build from Source
+
 ```bash
 # Navigate to go directory
 cd go
@@ -121,7 +127,7 @@ go build ./...
 # Run tests
 go test ./...
 
-# Build demo executable  
+# Build demo executable
 go build -o bin/ack-demo cmd/ack-demo/main.go
 ```
 
@@ -135,39 +141,39 @@ package main
 import (
     "context"
     "fmt"
-    
-    "github.com/agentcommercekit/ack/go/pkg/ackid"
-    "github.com/agentcommercekit/ack/go/pkg/keys"
+
+    "github.com/HomayoonAlimohammadi/ack/go/pkg/ackid"
+    "github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
 )
 
 func main() {
     // Create owner identity
     ownerKey, _ := keys.Generate(keys.CurveEd25519)
     owner, _ := ackid.NewAgent(ownerKey, "owner")
-    
-    // Create agent identity  
+
+    // Create agent identity
     agentKey, _ := keys.Generate(keys.CurveSecp256k1)
     agent, _ := ackid.NewAgent(agentKey, "agent")
-    
+
     // Establish controller relationship
     agent.SetController(owner.DID.String())
-    
+
     // Create verifier
     verifierKey, _ := keys.Generate(keys.CurveSecp256r1)
     verifier, _ := ackid.NewAgent(verifierKey, "verifier")
-    
+
     // Identity verification flow
     ctx := context.Background()
-    
+
     // 1. Verifier creates challenge
     challenge, _ := verifier.CreateChallenge(agent.DID.String())
-    
+
     // 2. Agent responds to challenge
     response, _ := agent.RespondToChallenge(ctx, challenge)
-    
+
     // 3. Verifier verifies response
     result, _ := verifier.VerifyResponse(ctx, response)
-    
+
     fmt.Printf("Verification: %+v\n", result)
     // Output: Verification: {Valid:true DID:did:web:agent.example.com TrustLevel:basic}
 }
@@ -181,37 +187,37 @@ package main
 import (
     "context"
     "math/big"
-    
-    "github.com/agentcommercekit/ack/go/pkg/ackpay"
-    "github.com/agentcommercekit/ack/go/pkg/keys"
+
+    "github.com/HomayoonAlimohammadi/ack/go/pkg/ackpay"
+    "github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
 )
 
 func main() {
     ctx := context.Background()
-    
+
     // Create payment service
     serviceKey, _ := keys.Generate(keys.CurveEd25519)
     service, _ := ackpay.NewPaymentService(serviceKey, "payment-service")
-    
+
     // Create payment request
     amount := big.NewInt(1000000) // 1 USDC (6 decimals)
     request, _ := service.CreatePaymentRequest(
-        "item-123", 
-        amount, 
+        "item-123",
+        amount,
         "USDC",
         []ackpay.PaymentMethod{
             {
                 Type:     "crypto",
-                Currency: "USDC", 
+                Currency: "USDC",
                 Network:  "base",
                 Address:  "0x1234567890123456789012345678901234567890",
             },
         },
     )
-    
+
     // Process payment (would normally be done by client)
     receipt, _ := service.ProcessPayment(ctx, request, request.Methods[0])
-    
+
     fmt.Printf("Payment Receipt: %s\n", receipt.ID)
 }
 ```
@@ -221,22 +227,26 @@ func main() {
 The Go implementation includes 4 comprehensive demos:
 
 ### 1. Identity Verification (`identity`)
+
 ```bash
 ./bin/ack-demo identity
 ```
+
 **What it demonstrates:**
+
 - Creates owner and agent identities using different cryptographic curves
-- Establishes controller relationships 
+- Establishes controller relationships
 - Demonstrates challenge-response verification flow
 - Shows trust level assessment
 
 **Sample Output:**
+
 ```
 🔐 ACK-ID Identity Verification Demo
 =====================================
 1. Creating Owner identity...
    Owner DID: did:key:u5wEE...
-2. Creating Agent identity...  
+2. Creating Agent identity...
    Agent DID: did:web:agent.example.com:agent-1
 3. Establishing controller relationship...
 4. Starting identity verification flow...
@@ -246,19 +256,23 @@ The Go implementation includes 4 comprehensive demos:
 ✅ Identity verification demo completed!
 ```
 
-### 2. Payment Processing (`payments`) 
-```bash  
+### 2. Payment Processing (`payments`)
+
+```bash
 ./bin/ack-demo payments
 ```
+
 **What it demonstrates:**
+
 - Creates client, server, and payment service identities
 - Generates payment requests with multiple methods
 - Attempts real blockchain verification (shows network errors for demo domains)
 - Demonstrates JWT-based payment receipt verification
 
 **Sample Output:**
+
 ```
-💳 ACK-Pay Payment Processing Demo  
+💳 ACK-Pay Payment Processing Demo
 ==================================
 1. Creating payment request...
    Amount: 1000000 USDC
@@ -271,29 +285,36 @@ The Go implementation includes 4 comprehensive demos:
 ```
 
 ### 3. End-to-End Demo (`e2e`)
+
 ```bash
-./bin/ack-demo e2e  
+./bin/ack-demo e2e
 ```
+
 **What it demonstrates:**
+
 - Combines identity verification and payment processing
 - Shows complete agent commerce workflow
 - Demonstrates interoperability between protocols
 
 ### 4. Google A2A Compatibility (`identity-a2a`)
+
 ```bash
 ./bin/ack-demo identity-a2a
 ```
+
 **What it demonstrates:**
+
 - Shows compatibility with Google Agent-to-Agent protocol
 - Demonstrates multi-curve interoperability (Ed25519 ↔ secp256k1)
 - Mutual authentication between different agent types
 
 **Sample Output:**
+
 ```
 🤝 ACK-ID with A2A Protocol Demo
 =================================
 1. Creating Bank Client Agent (Ed25519)...
-2. Creating Bank Teller Agent (secp256k1)...  
+2. Creating Bank Teller Agent (secp256k1)...
 3. Mutual Authentication Flow...
 4. Authenticated Communication:
    ✓ Mutual authentication successful
@@ -322,7 +343,7 @@ keyPair, err := keys.DecodePublicKeyMulticodec(encoded)
 
 ### DID Package
 
-```go  
+```go
 // Parse DIDs
 did, err := did.Parse("did:key:u5wEE...")
 did, err := did.Parse("did:web:example.com:user")
@@ -342,47 +363,53 @@ document, err := resolver.Resolve(ctx, did)
 // Create JWTs
 token, err := jwt.Create(keyPair, claims, issuerDID)
 
-// Verify JWTs  
+// Verify JWTs
 claims, err := jwt.Verify(token, publicKey, audience)
 ```
 
 ## 🧪 Testing
 
 ### Run All Tests
+
 ```bash
 go test -v ./...
 ```
 
-### Run Specific Package Tests  
+### Run Specific Package Tests
+
 ```bash
 go test -v ./pkg/keys/     # Cryptography tests
 go test -v ./pkg/did/      # DID parsing and resolution tests
 ```
 
 ### Test Coverage
+
 ```bash
 go test -cover ./...
 ```
 
 ### Current Test Status
+
 - ✅ **Keys Package**: 5/5 tests passing (key generation, signing, multicodec)
-- ✅ **DID Package**: 5/5 tests passing (parsing, creation, helpers)  
+- ✅ **DID Package**: 5/5 tests passing (parsing, creation, helpers)
 - ✅ **Build**: All packages compile successfully
 - ✅ **Demos**: All 4 demos run without errors
 
 ## 🛠️ Development
 
 ### Project Structure
+
 ```
 go/
 ├── pkg/           # Core packages (published as libraries)
-├── cmd/           # Executable commands  
+├── cmd/           # Executable commands
 ├── bin/           # Built executables
 ├── go.mod         # Go module definition
 └── go.sum         # Dependency checksums
 ```
 
 ### Code Standards
+
 - **Go 1.21+** with modern idioms
 - **Standard library** preferred over external dependencies
 - **Comprehensive error handling** with structured error types
@@ -390,6 +417,7 @@ go/
 - **Standards compliance** with W3C DID and VC specifications
 
 ### Build System
+
 ```bash
 # Development build
 go build ./...
@@ -402,20 +430,23 @@ GOOS=linux GOARCH=amd64 go build -o bin/ack-demo-linux cmd/ack-demo/main.go
 GOOS=windows GOARCH=amd64 go build -o bin/ack-demo.exe cmd/ack-demo/main.go
 ```
 
-## 📜 Standards Compliance  
+## 📜 Standards Compliance
 
 ### W3C Standards
+
 - **DID Core 1.0**: Full implementation of DID syntax, resolution, and documents
-- **Verifiable Credentials**: VC data model with cryptographic proof support  
+- **Verifiable Credentials**: VC data model with cryptographic proof support
 - **DID Methods**: `did:key` (RFC draft) and `did:web` (W3C standard)
 
 ### Cryptographic Standards
+
 - **Ed25519**: RFC 8032 digital signatures
-- **secp256k1**: Bitcoin/Ethereum ECDSA signatures  
+- **secp256k1**: Bitcoin/Ethereum ECDSA signatures
 - **secp256r1**: NIST P-256 ECDSA signatures
 - **JWT**: RFC 7519 with proper algorithm mapping (EdDSA, ES256K, ES256)
 
-### Protocol Compatibility  
+### Protocol Compatibility
+
 - **Google A2A**: Agent-to-Agent protocol compatibility
 - **HTTP 402**: Payment Required responses per RFC 7231
 - **Multicodec**: Standard key encoding per multiformats specification
@@ -423,12 +454,14 @@ GOOS=windows GOARCH=amd64 go build -o bin/ack-demo.exe cmd/ack-demo/main.go
 ## 🔒 Security
 
 ### Cryptographic Security
+
 - **Secure Random**: Uses `crypto/rand` for all key generation
 - **Multiple Curves**: Supports Ed25519, secp256k1, secp256r1 for algorithm diversity
 - **Proper Verification**: Full signature verification with curve-specific validation
 - **Key Safety**: No private key exposure in public APIs
 
-### Network Security  
+### Network Security
+
 - **HTTPS Only**: All `did:web` resolution uses HTTPS
 - **Timeout Protection**: HTTP requests have reasonable timeouts
 - **Error Handling**: No sensitive information leaked in error messages
@@ -444,6 +477,7 @@ This Go implementation provides a complete, unified alternative to the original 
 5. **Extensible design** for future protocol extensions
 
 To contribute:
+
 1. Fork the repository
 2. Create feature branch
 3. Write tests for new functionality

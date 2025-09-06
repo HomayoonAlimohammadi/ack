@@ -7,23 +7,23 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/agentcommercekit/ack/go/pkg/did"
-	"github.com/agentcommercekit/ack/go/pkg/jwt"
-	"github.com/agentcommercekit/ack/go/pkg/keys"
-	"github.com/agentcommercekit/ack/go/pkg/vc"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/did"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/jwt"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/vc"
 )
 
 // Agent represents an ACK-ID agent with cryptographic identity
 type Agent struct {
-	DID                *did.DID
-	Document           *did.Document
-	KeyPair            *keys.KeyPair
-	Name               string
-	ControllerKeyPair  *keys.KeyPair // Optional: for agents controlled by another entity
-	ControllerDID      *did.DID      // Optional: DID of the controlling entity
-	CredentialIssuerURL string       // URL of credential issuer
-	VerifierURL        string        // URL of credential verifier
-	Resolver           *did.Resolver // DID resolver for verification
+	DID                 *did.DID
+	Document            *did.Document
+	KeyPair             *keys.KeyPair
+	Name                string
+	ControllerKeyPair   *keys.KeyPair // Optional: for agents controlled by another entity
+	ControllerDID       *did.DID      // Optional: DID of the controlling entity
+	CredentialIssuerURL string        // URL of credential issuer
+	VerifierURL         string        // URL of credential verifier
+	Resolver            *did.Resolver // DID resolver for verification
 }
 
 // IdentityChallenge represents a cryptographic challenge for identity verification
@@ -39,12 +39,12 @@ type IdentityChallenge struct {
 
 // IdentityResponse represents the response to an identity challenge
 type IdentityResponse struct {
-	Challenge           string                 `json:"challenge"`
-	SignedChallenge     string                 `json:"signed_challenge"`   // JWT
-	DIDDocument         *did.Document          `json:"did_document"`
-	VerifiableCredential interface{}           `json:"verifiable_credential,omitempty"` // Can be single VC or array
-	AdditionalProofs    []string               `json:"additional_proofs,omitempty"`
-	Metadata            map[string]interface{} `json:"metadata,omitempty"`
+	Challenge            string                 `json:"challenge"`
+	SignedChallenge      string                 `json:"signed_challenge"` // JWT
+	DIDDocument          *did.Document          `json:"did_document"`
+	VerifiableCredential interface{}            `json:"verifiable_credential,omitempty"` // Can be single VC or array
+	AdditionalProofs     []string               `json:"additional_proofs,omitempty"`
+	Metadata             map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // VerificationResult represents the result of identity verification
@@ -63,12 +63,12 @@ type VerificationResult struct {
 type TrustLevel string
 
 const (
-	TrustNone         TrustLevel = "none"
-	TrustDIDOnly      TrustLevel = "did_only"      // Only DID verified
-	TrustBasic        TrustLevel = "basic"         // DID + signature verified
-	TrustCredential   TrustLevel = "credential"    // Has valid credential
-	TrustController   TrustLevel = "controller"    // Has valid controller credential
-	TrustFull         TrustLevel = "full"          // Complete verification chain
+	TrustNone       TrustLevel = "none"
+	TrustDIDOnly    TrustLevel = "did_only"   // Only DID verified
+	TrustBasic      TrustLevel = "basic"      // DID + signature verified
+	TrustCredential TrustLevel = "credential" // Has valid credential
+	TrustController TrustLevel = "controller" // Has valid controller credential
+	TrustFull       TrustLevel = "full"       // Complete verification chain
 )
 
 // NewAgent creates a new ACK-ID agent
@@ -92,7 +92,7 @@ func NewAgent(curve keys.CurveType, name string) (*Agent, error) {
 
 	// Create DID document
 	document := did.NewDocument(agentDID.String())
-	
+
 	// Add verification method
 	vmID := agentDID.String() + "#key-1"
 	vm := did.VerificationMethod{
@@ -101,7 +101,7 @@ func NewAgent(curve keys.CurveType, name string) (*Agent, error) {
 		Controller:         agentDID.String(),
 		PublicKeyMultibase: pubKeyMulticodec,
 	}
-	
+
 	document.AddVerificationMethod(vm)
 	document.AddAuthentication(vmID)
 	document.AddAssertionMethod(vmID)
@@ -131,7 +131,7 @@ func NewWebAgent(curve keys.CurveType, domain, name string, path ...string) (*Ag
 
 	// Create DID document
 	document := did.NewDocument(agentDID.String())
-	
+
 	// Add verification method
 	pubKeyMulticodec, err := keyPair.EncodePublicKeyMulticodec()
 	if err != nil {
@@ -145,7 +145,7 @@ func NewWebAgent(curve keys.CurveType, domain, name string, path ...string) (*Ag
 		Controller:         agentDID.String(),
 		PublicKeyMultibase: pubKeyMulticodec,
 	}
-	
+
 	document.AddVerificationMethod(vm)
 	document.AddAuthentication(vmID)
 	document.AddAssertionMethod(vmID)
@@ -183,7 +183,7 @@ func (a *Agent) CreateChallenge(targetDID string, purpose string, requiredVCs ..
 	if _, err := rand.Read(challengeBytes); err != nil {
 		return nil, fmt.Errorf("failed to generate challenge: %w", err)
 	}
-	
+
 	// Generate nonce
 	nonceBytes := make([]byte, 16)
 	if _, err := rand.Read(nonceBytes); err != nil {
@@ -507,7 +507,7 @@ func (a *Agent) assessCredentialTrust(credential *vc.Credential, holderDID strin
 	// Check credential types for specific trust levels
 	hasControllerCredential := false
 	hasPaymentCredential := false
-	
+
 	for _, credType := range credential.Type {
 		switch credType {
 		case "ControllerCredential":
@@ -586,7 +586,7 @@ func (a *Agent) isValidControllerRelationship(controllerDID, agentDID string) bo
 	// 2. Verifying the controller's own credentials
 	// 3. Checking delegation chains
 	// 4. Validating against organizational policies
-	
+
 	// For now, accept any controller relationship that is properly formed
 	return controllerDID != "" && agentDID != "" && controllerDID != agentDID
 }
@@ -594,7 +594,7 @@ func (a *Agent) isValidControllerRelationship(controllerDID, agentDID string) bo
 // retrieveRequiredCredentials retrieves the required credentials for a challenge
 func (a *Agent) retrieveRequiredCredentials(ctx context.Context, requiredVCs []string) ([]string, error) {
 	var credentials []string
-	
+
 	for _, requiredType := range requiredVCs {
 		switch requiredType {
 		case "ControllerCredential":
@@ -615,7 +615,7 @@ func (a *Agent) retrieveRequiredCredentials(ctx context.Context, requiredVCs []s
 			continue
 		}
 	}
-	
+
 	return credentials, nil
 }
 
@@ -629,7 +629,7 @@ func (a *Agent) generateControllerCredential(ctx context.Context) (string, error
 	credential := vc.NewCredential()
 	credential.AddType("ControllerCredential")
 	credential.SetIssuer(a.ControllerDID.String())
-	
+
 	// Set subject as this agent with controller information
 	credential.CredentialSubject = map[string]interface{}{
 		"id":         a.DID.String(),

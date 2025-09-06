@@ -12,7 +12,7 @@ go/
 │   │   └── ack.go              # Unified API surface
 │   ├── ackid/                   # 🔐 ACK-ID protocol implementation
 │   │   └── agent.go            # Identity verification, challenge-response
-│   ├── ackpay/                  # 💳 ACK-Pay protocol implementation  
+│   ├── ackpay/                  # 💳 ACK-Pay protocol implementation
 │   │   └── payment.go          # Payment processing, receipts
 │   ├── crypto/                  # 🔒 Cryptographic utilities (future)
 │   ├── did/                     # 🆔 W3C Decentralized Identifiers
@@ -47,6 +47,7 @@ go/
 ### Core Layer (Cryptographic Primitives)
 
 #### `pkg/keys` - Multi-Curve Cryptography
+
 - **Purpose**: Foundation for all cryptographic operations
 - **Features**:
   - Ed25519, secp256k1, secp256r1 key generation
@@ -56,12 +57,14 @@ go/
 - **Key Types**: `CurveType`, `KeyPair`
 
 #### `pkg/crypto` - Additional Cryptographic Utilities
+
 - **Status**: Planned for future expansion
 - **Purpose**: Hash functions, encryption, additional curves
 
 ### Identity Layer (W3C Standards)
 
-#### `pkg/did` - Decentralized Identifiers  
+#### `pkg/did` - Decentralized Identifiers
+
 - **Purpose**: W3C DID specification implementation
 - **Features**:
   - `did:key` and `did:web` method support
@@ -71,7 +74,8 @@ go/
 - **Key Types**: `DID`, `Document`, `Service`, `VerificationMethod`
 
 #### `pkg/vc` - Verifiable Credentials
-- **Purpose**: W3C VC specification implementation  
+
+- **Purpose**: W3C VC specification implementation
 - **Features**:
   - Credential and Presentation creation
   - JWT format support
@@ -80,6 +84,7 @@ go/
 - **Key Types**: `Credential`, `Presentation`, `Proof`
 
 #### `pkg/jwt` - JSON Web Tokens
+
 - **Purpose**: JWT creation and verification
 - **Features**:
   - Multi-algorithm support (EdDSA, ES256K, ES256)
@@ -91,6 +96,7 @@ go/
 ### Protocol Layer (ACK Protocols)
 
 #### `pkg/ackid` - ACK-ID Identity Protocol
+
 - **Purpose**: Agent identity verification protocol
 - **Features**:
   - Challenge-response authentication
@@ -100,7 +106,8 @@ go/
   - A2A protocol compatibility
 - **Key Types**: `Agent`, `IdentityChallenge`, `IdentityResponse`, `VerificationResult`
 
-#### `pkg/ackpay` - ACK-Pay Payment Protocol  
+#### `pkg/ackpay` - ACK-Pay Payment Protocol
+
 - **Purpose**: Agent commerce payment processing
 - **Features**:
   - Multi-method payment support (crypto, Stripe, etc.)
@@ -112,21 +119,23 @@ go/
 ### SDK Layer (Unified API)
 
 #### `pkg/ack` - Main SDK Package
+
 - **Purpose**: Single import for all ACK functionality
 - **Features**:
   - Re-exports all public types and functions
-  - Consistent naming conventions  
+  - Consistent naming conventions
   - Version information
   - Constants for all enums
-- **Usage**: `import "github.com/agentcommercekit/ack/go/pkg/ack"`
+- **Usage**: `import "github.com/HomayoonAlimohammadi/ack/go/pkg/ack"`
 
 ### Application Layer
 
 #### `cmd/ack-demo` - Interactive Demonstrations
+
 - **Purpose**: Showcase complete ACK workflows
 - **Demos Available**:
   1. **`identity`** - ACK-ID identity verification
-  2. **`payments`** - ACK-Pay payment processing  
+  2. **`payments`** - ACK-Pay payment processing
   3. **`e2e`** - End-to-end ACK-ID + ACK-Pay
   4. **`identity-a2a`** - A2A protocol compatibility
 - **Usage**: `./bin/ack-demo <demo-name>`
@@ -136,10 +145,10 @@ go/
 ```
 Application Layer
        ↕
-  SDK Layer (pkg/ack)  
+  SDK Layer (pkg/ack)
        ↕
 Protocol Layer (ackid, ackpay)
-       ↕  
+       ↕
 Identity Layer (did, vc, jwt)
        ↕
 Core Layer (keys, crypto)
@@ -149,7 +158,7 @@ Core Layer (keys, crypto)
 
 ```
 pkg/keys/keys_test.go      # ✅ Multi-curve crypto tests
-pkg/did/did_test.go        # ✅ DID parsing and validation tests  
+pkg/did/did_test.go        # ✅ DID parsing and validation tests
 pkg/jwt/                   # ⚠️ JWT tests needed
 pkg/vc/                    # ⚠️ VC tests needed
 pkg/ackid/                 # ⚠️ Protocol integration tests needed
@@ -159,13 +168,15 @@ pkg/ackpay/                # ⚠️ Payment flow tests needed
 ## 📦 Module Dependencies
 
 ### External Dependencies
+
 - `github.com/btcsuite/btcd/btcec/v2` - secp256k1 cryptography
 - Standard Go crypto libraries (crypto/ed25519, crypto/ecdsa, etc.)
 
 ### Internal Dependencies
+
 ```
 ack → {ackid, ackpay, did, vc, jwt, keys}
-ackid → {did, jwt, keys}  
+ackid → {did, jwt, keys}
 ackpay → {did, jwt, keys, vc}
 vc → {jwt, keys}
 jwt → {keys}
@@ -176,24 +187,28 @@ keys → (no internal deps)
 ## 🚀 Extension Points
 
 ### Adding New Cryptographic Curves
+
 1. Add curve constant to `pkg/keys/curves.go`
 2. Implement generation in `pkg/keys/generate.go`
 3. Add signing/verification in `pkg/keys/signing.go`
 4. Update multicodec prefixes in `pkg/keys/multicodec.go`
 
 ### Adding New DID Methods
+
 1. Add method constant to `pkg/did/did.go`
 2. Implement `Create*` function for the method
 3. Add method-specific validation logic
 4. Update helper methods (`Is*`, `Get*`)
 
 ### Adding New Payment Methods
+
 1. Add method type to `pkg/ackpay/payment.go`
 2. Implement processor in `PaymentService.Process*Payment`
 3. Add method-specific validation
 4. Update demo examples
 
 ### Adding New Services
+
 1. Create service package under `cmd/`
 2. Import `pkg/ack` for unified API
 3. Implement service-specific logic
@@ -202,7 +217,7 @@ keys → (no internal deps)
 ## 🎯 Design Principles
 
 1. **Layered Architecture** - Clear separation of concerns
-2. **Standards Compliance** - Full W3C and ACK specification adherence  
+2. **Standards Compliance** - Full W3C and ACK specification adherence
 3. **Type Safety** - Strong typing prevents runtime errors
 4. **Performance** - Native Go speed for crypto operations
 5. **Extensibility** - Easy to add new curves, methods, protocols

@@ -3,12 +3,12 @@
 package ack
 
 import (
-	"github.com/agentcommercekit/ack/go/pkg/ackid"
-	"github.com/agentcommercekit/ack/go/pkg/ackpay"
-	"github.com/agentcommercekit/ack/go/pkg/did"
-	"github.com/agentcommercekit/ack/go/pkg/jwt"
-	"github.com/agentcommercekit/ack/go/pkg/keys"
-	"github.com/agentcommercekit/ack/go/pkg/vc"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/ackid"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/ackpay"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/did"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/jwt"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/vc"
 )
 
 // Re-export key types from sub-packages for convenience
@@ -51,12 +51,12 @@ type (
 
 // ACK-Pay
 type (
-	PaymentRequest     = ackpay.PaymentRequest
-	PaymentMethod      = ackpay.PaymentMethod
-	PaymentMethodType  = ackpay.PaymentMethodType
-	PaymentReceipt     = ackpay.PaymentReceipt
-	PaymentResponse    = ackpay.PaymentResponse
-	PaymentService     = ackpay.PaymentService
+	PaymentRequest    = ackpay.PaymentRequest
+	PaymentMethod     = ackpay.PaymentMethod
+	PaymentMethodType = ackpay.PaymentMethodType
+	PaymentReceipt    = ackpay.PaymentReceipt
+	PaymentResponse   = ackpay.PaymentResponse
+	PaymentService    = ackpay.PaymentService
 )
 
 // Constants
@@ -65,14 +65,14 @@ const (
 	CurveEd25519   = keys.CurveEd25519
 	CurveSecp256k1 = keys.CurveSecp256k1
 	CurveSecp256r1 = keys.CurveSecp256r1
-	
+
 	// Payment Methods
-	PaymentMethodCrypto      = ackpay.PaymentMethodCrypto
-	PaymentMethodCreditCard  = ackpay.PaymentMethodCreditCard
+	PaymentMethodCrypto       = ackpay.PaymentMethodCrypto
+	PaymentMethodCreditCard   = ackpay.PaymentMethodCreditCard
 	PaymentMethodBankTransfer = ackpay.PaymentMethodBankTransfer
-	PaymentMethodPayPal      = ackpay.PaymentMethodPayPal
-	PaymentMethodStripe      = ackpay.PaymentMethodStripe
-	PaymentMethodWire        = ackpay.PaymentMethodWire
+	PaymentMethodPayPal       = ackpay.PaymentMethodPayPal
+	PaymentMethodStripe       = ackpay.PaymentMethodStripe
+	PaymentMethodWire         = ackpay.PaymentMethodWire
 )
 
 // Key generation functions
@@ -83,10 +83,10 @@ var (
 
 // DID functions
 var (
-	ParseDID      = did.Parse
-	CreateKeyDID  = did.CreateKey
-	CreateWebDID  = did.CreateWeb
-	NewDocument   = did.NewDocument
+	ParseDID         = did.Parse
+	CreateKeyDID     = did.CreateKey
+	CreateWebDID     = did.CreateWeb
+	NewDocument      = did.NewDocument
 	DocumentFromJSON = did.FromJSON
 )
 
@@ -99,23 +99,23 @@ var (
 
 // VC functions
 var (
-	NewCredential         = vc.NewCredential
-	NewPresentation       = vc.NewPresentation
-	CredentialFromJSON    = vc.CredentialFromJSON
-	PresentationFromJSON  = vc.PresentationFromJSON
-	CredentialFromJWT     = vc.CredentialFromJWT
-	VerifyCredentialJWT   = vc.VerifyJWT
+	NewCredential        = vc.NewCredential
+	NewPresentation      = vc.NewPresentation
+	CredentialFromJSON   = vc.CredentialFromJSON
+	PresentationFromJSON = vc.PresentationFromJSON
+	CredentialFromJWT    = vc.CredentialFromJWT
+	VerifyCredentialJWT  = vc.VerifyJWT
 )
 
 // ACK-ID functions
 var (
-	NewAgent              = ackid.NewAgent
-	NewWebAgent           = ackid.NewWebAgent
+	NewAgent    = ackid.NewAgent
+	NewWebAgent = ackid.NewWebAgent
 )
 
 // ACK-Pay functions
 var (
-	NewPaymentService     = ackpay.NewPaymentService
+	NewPaymentService = ackpay.NewPaymentService
 )
 
 // Version information

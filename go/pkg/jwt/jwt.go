@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/agentcommercekit/ack/go/pkg/keys"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
 )
 
 // Header represents JWT header
@@ -72,7 +72,7 @@ func Sign(header Header, claims Claims, keyPair *keys.KeyPair) (string, error) {
 	// Ensure algorithm matches key curve
 	expectedAlg := keyPair.Algorithm()
 	if header.Algorithm != expectedAlg {
-		return "", fmt.Errorf("algorithm mismatch: header has %s, key requires %s", 
+		return "", fmt.Errorf("algorithm mismatch: header has %s, key requires %s",
 			header.Algorithm, expectedAlg)
 	}
 
@@ -90,7 +90,7 @@ func Sign(header Header, claims Claims, keyPair *keys.KeyPair) (string, error) {
 
 	// Prepare claims map including extra claims
 	claimsMap := make(map[string]interface{})
-	
+
 	// Add standard claims
 	if claims.Issuer != "" {
 		claimsMap["iss"] = claims.Issuer
@@ -113,7 +113,7 @@ func Sign(header Header, claims Claims, keyPair *keys.KeyPair) (string, error) {
 	if claims.JWTID != "" {
 		claimsMap["jti"] = claims.JWTID
 	}
-	
+
 	// Add extra claims
 	for k, v := range claims.Extra {
 		claimsMap[k] = v
@@ -154,7 +154,7 @@ func Parse(tokenString string) (*Token, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode header: %w", err)
 	}
-	
+
 	var header Header
 	if err := json.Unmarshal(headerJSON, &header); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal header: %w", err)
@@ -234,7 +234,7 @@ func (t *Token) Verify(keyPair *keys.KeyPair) error {
 	// Check algorithm matches
 	expectedAlg := keyPair.Algorithm()
 	if t.Header.Algorithm != expectedAlg {
-		return fmt.Errorf("algorithm mismatch: token has %s, key requires %s", 
+		return fmt.Errorf("algorithm mismatch: token has %s, key requires %s",
 			t.Header.Algorithm, expectedAlg)
 	}
 
@@ -243,7 +243,7 @@ func (t *Token) Verify(keyPair *keys.KeyPair) error {
 	if len(parts) != 3 {
 		return fmt.Errorf("invalid token format")
 	}
-	
+
 	signingInput := parts[0] + "." + parts[1]
 
 	// Verify signature

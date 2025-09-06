@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/agentcommercekit/ack/go/pkg/jwt"
-	"github.com/agentcommercekit/ack/go/pkg/keys"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/jwt"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/keys"
 )
 
 // Credential represents a W3C Verifiable Credential
@@ -207,9 +207,9 @@ func (c *Credential) ToJWT(keyPair *keys.KeyPair, kid string) (string, error) {
 
 	// Create JWT claims
 	claims := jwt.Claims{
-		Issuer:    c.GetIssuerID(),
-		IssuedAt:  jwt.NewNumericDate(c.IssuanceDate),
-		Extra:     make(map[string]interface{}),
+		Issuer:   c.GetIssuerID(),
+		IssuedAt: jwt.NewNumericDate(c.IssuanceDate),
+		Extra:    make(map[string]interface{}),
 	}
 
 	if c.ExpirationDate != nil {

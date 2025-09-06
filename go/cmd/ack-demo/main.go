@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/agentcommercekit/ack/go/pkg/ack"
+	"github.com/HomayoonAlimohammadi/ack/go/pkg/ack"
 )
 
 func main() {
@@ -44,7 +44,7 @@ func main() {
 func runIdentityDemo(ctx context.Context) {
 	fmt.Println("🔐 ACK-ID Identity Verification Demo")
 	fmt.Println("=====================================")
-	
+
 	// Create Owner (human with DID and keys)
 	fmt.Println("1. Creating Owner identity...")
 	owner, err := ack.NewAgent(ack.CurveSecp256k1, "Alice (Owner)")
@@ -87,7 +87,7 @@ func runIdentityDemo(ctx context.Context) {
 
 	// Challenge-Response Flow
 	fmt.Println("5. Starting identity verification flow...")
-	
+
 	// Verifier creates challenge for agent
 	fmt.Println("   → Verifier creates challenge for Agent")
 	challenge, err := verifier.CreateChallenge(
@@ -175,11 +175,11 @@ func runPaymentsDemo(ctx context.Context) {
 
 	paymentMethods := []ack.PaymentMethod{
 		{
-			Type:     ack.PaymentMethodCrypto,
-			Currency: "USDC",
-			Network:  "base-sepolia",
-			Address:  "0x1234567890123456789012345678901234567890",
-			MinAmount: big.NewInt(100000), // 0.1 USDC minimum
+			Type:      ack.PaymentMethodCrypto,
+			Currency:  "USDC",
+			Network:   "base-sepolia",
+			Address:   "0x1234567890123456789012345678901234567890",
+			MinAmount: big.NewInt(100000),     // 0.1 USDC minimum
 			MaxAmount: big.NewInt(1000000000), // 1000 USDC maximum
 		},
 		{
@@ -229,7 +229,7 @@ func runPaymentsDemo(ctx context.Context) {
 		fmt.Println("6. Payment Receipt Generated:")
 		fmt.Printf("   Receipt ID: %s\n", paymentResponse.Receipt.ID)
 		fmt.Printf("   Verifiable Receipt: %t\n", paymentResponse.Receipt.VerifiableReceipt != nil)
-		
+
 		if paymentResponse.Receipt.VerifiableReceipt != nil {
 			fmt.Printf("   Credential Type: %v\n", paymentResponse.Receipt.VerifiableReceipt.Type)
 			fmt.Printf("   Issuer: %s\n", paymentResponse.Receipt.VerifiableReceipt.GetIssuerID())
@@ -239,7 +239,7 @@ func runPaymentsDemo(ctx context.Context) {
 	// Demonstrate receipt verification
 	if paymentResponse.Receipt != nil && paymentResponse.Receipt.VerifiableReceipt != nil {
 		fmt.Println("7. Verifying payment receipt...")
-		
+
 		// Convert receipt to JWT for verification demo
 		receiptJWT, err := paymentResponse.Receipt.VerifiableReceipt.ToJWT(
 			paymentService.KeyPair,
@@ -271,7 +271,7 @@ func runE2EDemo(ctx context.Context) {
 	// This would combine identity verification with payment processing
 	fmt.Println("1. Running identity verification...")
 	runIdentityDemo(ctx)
-	
+
 	fmt.Println("\n2. Running payment processing...")
 	runPaymentsDemo(ctx)
 
@@ -293,7 +293,7 @@ func runIdentityA2ADemo(ctx context.Context) {
 	}
 	fmt.Printf("   Client Agent DID: %s\n", clientAgent.DID.String())
 
-	// Create Bank Teller Agent (service provider)  
+	// Create Bank Teller Agent (service provider)
 	fmt.Println("2. Creating Bank Teller Agent (secp256k1)...")
 	tellerAgent, err := ack.NewWebAgent(ack.CurveSecp256k1, "bank.example.com", "Bank Teller Agent", "teller")
 	if err != nil {
@@ -311,7 +311,7 @@ func runIdentityA2ADemo(ctx context.Context) {
 	// Demonstrate service discovery
 	fmt.Println("3. Service Discovery...")
 	fmt.Printf("   Client discovers Teller services via DID: %s\n", tellerAgent.DID.String())
-	
+
 	services := tellerAgent.Document.GetServicesByType("AgentCard")
 	if len(services) > 0 {
 		fmt.Printf("   Found AgentCard service: %v\n", services[0].ServiceEndpoint)
@@ -319,7 +319,7 @@ func runIdentityA2ADemo(ctx context.Context) {
 
 	// Demonstrate mutual authentication
 	fmt.Println("4. Mutual Authentication Flow...")
-	
+
 	// Client creates challenge for Teller
 	clientChallenge, err := clientAgent.CreateChallenge(
 		tellerAgent.DID.String(),

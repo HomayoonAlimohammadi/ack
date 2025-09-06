@@ -12,22 +12,25 @@ This guide will help you get up and running with the Go implementation of Agent 
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/agentcommercekit/ack.git
    cd ack/go
    ```
 
 2. **Install dependencies:**
+
    ```bash
    go mod download
    ```
 
 3. **Run the demos:**
+
    ```bash
    # ACK-ID identity verification demo
    go run cmd/ack-demo/main.go identity
 
-   # ACK-Pay payment processing demo  
+   # ACK-Pay payment processing demo
    go run cmd/ack-demo/main.go payments
 
    # End-to-end demo (ACK-ID + ACK-Pay)
@@ -53,7 +56,7 @@ package main
 
 import (
     "fmt"
-    "github.com/agentcommercekit/ack/go/pkg/ack"
+    "github.com/HomayoonAlimohammadi/ack/go/pkg/ack"
 )
 
 func main() {
@@ -176,13 +179,14 @@ secp256r1Keys, _ := ack.GenerateKeyPair(ack.CurveSecp256r1)
 
 // Each automatically uses the correct JWT algorithm
 fmt.Printf("Ed25519 uses: %s\n", ed25519Keys.Algorithm())   // EdDSA
-fmt.Printf("secp256k1 uses: %s\n", secp256k1Keys.Algorithm()) // ES256K  
+fmt.Printf("secp256k1 uses: %s\n", secp256k1Keys.Algorithm()) // ES256K
 fmt.Printf("secp256r1 uses: %s\n", secp256r1Keys.Algorithm()) // ES256
 ```
 
 ### DID Methods
 
 #### did:key (Cryptographic)
+
 ```go
 // Create from existing key pair
 pubKey, _ := keyPair.EncodePublicKeyMulticodec()
@@ -190,13 +194,14 @@ did, _ := ack.CreateKeyDID(pubKey)
 ```
 
 #### did:web (Domain-based)
+
 ```go
 // Simple domain
 did1, _ := ack.CreateWebDID("example.com")
 // → did:web:example.com
 
 // With path
-did2, _ := ack.CreateWebDID("example.com", "users", "alice")  
+did2, _ := ack.CreateWebDID("example.com", "users", "alice")
 // → did:web:example.com:users:alice
 ```
 
@@ -238,7 +243,7 @@ go test ./pkg/jwt -v
 The Go implementation provides a layered architecture:
 
 1. **Core Layer** (`pkg/keys`, `pkg/crypto`) - Cryptographic primitives
-2. **Identity Layer** (`pkg/did`, `pkg/vc`, `pkg/jwt`) - W3C standards implementation  
+2. **Identity Layer** (`pkg/did`, `pkg/vc`, `pkg/jwt`) - W3C standards implementation
 3. **Protocol Layer** (`pkg/ackid`, `pkg/ackpay`) - ACK protocol implementation
 4. **SDK Layer** (`pkg/ack`) - Unified API surface
 5. **Application Layer** (`cmd/`) - Demo applications and tools
@@ -254,11 +259,11 @@ The Go implementation provides a layered architecture:
 
 This Go implementation provides several advantages over the original TypeScript version:
 
-✅ **Unified Architecture** - Single, coherent implementation rather than scattered demos  
-✅ **Complete Workflows** - Full end-to-end implementations, not half-baked examples  
-✅ **Production Ready** - Proper error handling, testing, and documentation  
-✅ **Standards Compliant** - Full W3C DID/VC specification compliance  
-✅ **Multi-Curve Support** - Comprehensive cryptographic curve support  
-✅ **Performance** - Native Go performance for cryptographic operations  
-✅ **Type Safety** - Strong typing throughout the entire stack  
+✅ **Unified Architecture** - Single, coherent implementation rather than scattered demos
+✅ **Complete Workflows** - Full end-to-end implementations, not half-baked examples
+✅ **Production Ready** - Proper error handling, testing, and documentation
+✅ **Standards Compliant** - Full W3C DID/VC specification compliance
+✅ **Multi-Curve Support** - Comprehensive cryptographic curve support
+✅ **Performance** - Native Go performance for cryptographic operations
+✅ **Type Safety** - Strong typing throughout the entire stack
 ✅ **Extensible** - Plugin architecture for new payment methods and verification strategies
